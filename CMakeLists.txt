@@ -69,7 +69,7 @@ target_sources(yy_values
     yy_values_metric_id.cpp
     yy_values_metric_data.cpp
 
-  PRIVATE FILE_SET HEADERS
+  PUBLIC FILE_SET HEADERS
     FILES
       yy_configure_label_actions.hpp
       yy_configure_values.hpp
@@ -93,10 +93,10 @@ target_sources(yy_values
       yy_values_metric_data.hpp
       yy_value_type.hpp )
 
-get_target_property(yy_headers yy_values HEADER_SET)
-install(FILES ${yy_headers} DESTINATION include/yy_values)
+install(TARGETS yy_values
+  EXPORT yy_valuesTargets
+  FILE_SET HEADERS DESTINATION include/yy_values)
 
-install(TARGETS yy_values EXPORT yy_valuesTargets)
 install(EXPORT yy_valuesTargets
   NAMESPACE yy_values::
   DESTINATION lib/cmake/yy_values)
