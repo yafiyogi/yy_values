@@ -74,6 +74,8 @@ constexpr const auto g_value_action_types =
   yy_data::make_lookup<std::string_view, ValueActionType>({{KeepValueAction::action_name, ValueActionType::Keep},
                                                            {SwitchValueAction::action_name, ValueActionType::Switch}});
 
+} // anonymous namespace
+
 LabelActions configure_label_actions(const YAML::Node & yaml_label_actions)
 {
   LabelActions label_actions;
@@ -255,11 +257,24 @@ LabelActions configure_value_properties(const YAML::Node & yaml_value)
   LabelActions l_property_actions{};
 
   // Configure 'location' property.
+
+  if(const auto & yaml_location = yaml_value[yy_values::g_label_location];
+     yaml_location)
   {
-    auto create_location = [&yaml_value]() {
+    auto create_location = [&yaml_location]() {
       ReplacementTopicsConfig topics_config{};
 
-      configure_label_action_replace_path_format(yaml_value[yy_values::g_label_location], topics_config);
+      if(yy_util::yaml_is_scalar(yaml_location))
+      {
+        configure_label_action_replace_path_format(yaml_location, topics_config);
+      }
+      else if(yy_util::yaml_is_sequence(yaml_location))
+      {
+        for(const auto & yaml_loc : yaml_location)
+        {
+          configure_label_action_replace_path_format(yaml_loc, topics_config);
+        }
+      }
 
       return topics_config.create_automaton();
     };
@@ -270,8 +285,6 @@ LabelActions configure_value_properties(const YAML::Node & yaml_value)
 
   return l_property_actions;
 }
-
-} // anonymous namespace
 
 MetricsMap configure_values(const YAML::Node & yaml_values)
 {
