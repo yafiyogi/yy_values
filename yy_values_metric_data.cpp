@@ -29,7 +29,7 @@
 namespace yafiyogi::yy_values {
 
 MetricData::MetricData(const MetricId & p_id) noexcept:
-  m_id(std::move(p_id))
+  m_id(p_id)
 {
 }
 
@@ -38,6 +38,22 @@ MetricData::MetricData(MetricId && p_id,
   m_id(std::move(p_id)),
   m_labels(std::move(p_labels))
 {
+}
+
+MetricData & MetricData::operator=(MetricData && p_other) noexcept
+{
+  if(this != &p_other)
+  {
+    m_id = std::move(p_other.m_id);
+    m_labels = std::move(p_other.m_labels);
+    m_timestamp = p_other.m_timestamp;
+    p_other.m_timestamp = timestamp_type{};
+    m_value = std::move(p_other.m_value);
+    m_binary = std::move(p_other.m_binary);
+    m_value_type = p_other.m_value_type;
+    p_other.m_value_type = ValueType::Unknown;
+  }
+  return *this;
 }
 
 void MetricData::swap(MetricData & p_other) noexcept

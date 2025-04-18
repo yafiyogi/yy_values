@@ -61,43 +61,40 @@ class MetricData
       p_other.m_timestamp = timestamp_type{};
       p_other.m_value_type = ValueType::Unknown;
     }
+
     virtual ~MetricData() noexcept = default;
 
     constexpr MetricData & operator=(const MetricData &) noexcept = default;
-    constexpr MetricData & operator=(MetricData && p_other) noexcept
+    MetricData & operator=(MetricData && p_other) noexcept;
+
+    constexpr bool operator<(const MetricData & p_other) const noexcept
     {
-      if(this != &p_other)
-      {
-        m_id = std::move(p_other.m_id);
-        m_labels = std::move(p_other.m_labels);
-        m_timestamp = p_other.m_timestamp;
-        p_other.m_timestamp = timestamp_type{};
-        m_value = std::move(p_other.m_value);
-        m_binary = std::move(p_other.m_binary);
-        m_value_type = p_other.m_value_type;
-        p_other.m_value_type = ValueType::Unknown;
-      }
-      return *this;
+      return compare(p_other) < 0;
     }
 
-    constexpr bool operator<(const MetricData & other) const noexcept
+    constexpr bool operator==(const MetricData & p_other) const noexcept
     {
-      return m_id < other.m_id;
+      return compare(p_other) == 0;
     }
 
-    constexpr bool operator==(const MetricData & other) const noexcept
+    constexpr int compare(const MetricData & p_other) const noexcept
     {
-      return m_id == other.m_id;
-    }
-
-    constexpr MetricId & Id() noexcept
-    {
-      return m_id;
+      return m_id.compare(p_other.m_id);
     }
 
     constexpr const MetricId & Id() const noexcept
     {
       return m_id;
+    }
+
+    constexpr void Id(const MetricId & p_id) noexcept
+    {
+      m_id = p_id;
+    }
+
+    constexpr void Location(const std::string & p_location) noexcept
+    {
+      m_id.Location(p_location);
     }
 
     constexpr yy_values::Labels & Labels() noexcept
