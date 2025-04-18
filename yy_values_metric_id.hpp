@@ -44,25 +44,25 @@ class MetricId final
     constexpr MetricId & operator=(const MetricId &) noexcept = default;
     constexpr MetricId & operator=(MetricId &&) noexcept = default;
 
-    constexpr bool operator<(const MetricId & other) const noexcept
+    constexpr bool operator<(const MetricId & p_other) const noexcept
     {
-      return std::tie(m_name, m_location) < std::tie(other.m_name, other.m_location);
+      return compare(p_other) < 0;
     }
 
-    constexpr bool operator==(const MetricId & other) const noexcept
+    constexpr bool operator==(const MetricId & p_other) const noexcept
     {
-      return std::tie(m_name, m_location) == std::tie(other.m_name, other.m_location);
+      return compare(p_other) == 0;
     }
 
-    constexpr int compare(const MetricId & other) const noexcept
+    constexpr int compare(const MetricId & p_other) const noexcept
     {
-      if(int comp = m_name.compare(other.m_name);
+      if(int comp = m_name.compare(p_other.m_name);
          0 != comp)
       {
         return comp;
       }
 
-      return m_location.compare(other.m_location);
+      return m_location.compare(p_other.m_location);
     }
 
     constexpr const std::string & Name() const noexcept
