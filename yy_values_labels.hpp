@@ -73,8 +73,20 @@ class Labels final
       return m_labels.size();
     }
 
-    bool operator<(const Labels & other) const noexcept;
-    bool operator==(const Labels & other) const noexcept;
+    constexpr bool operator<(const Labels & p_other) const noexcept
+    {
+      return m_labels.compare(p_other.m_labels) < 0;
+    }
+
+    constexpr bool operator==(const Labels & p_other) const noexcept
+    {
+      return m_labels.compare(p_other.m_labels) == 0;
+    }
+
+    constexpr int compare(const Labels & p_other) const noexcept
+    {
+      return m_labels.compare(p_other.m_labels);
+    }
 
     template<typename Visitor>
     void visit(Visitor && visitor) const
@@ -82,11 +94,11 @@ class Labels final
       m_labels.visit(std::forward<Visitor>(visitor));
     }
 
-    constexpr void swap(Labels & other) noexcept
+    constexpr void swap(Labels & p_other) noexcept
     {
-      if(this != &other)
+      if(this != &p_other)
       {
-        std::swap(m_labels, other.m_labels);
+        std::swap(m_labels, p_other.m_labels);
       }
     }
 

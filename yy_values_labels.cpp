@@ -77,14 +77,4 @@ void Labels::erase(const std::string_view p_label)
   m_labels.erase(p_label);
 }
 
-bool Labels::operator<(const Labels & other) const noexcept
-{
-  return m_labels < other.m_labels;
-}
-
-bool Labels::operator==(const Labels & other) const noexcept
-{
-  return m_labels == other.m_labels;
-}
-
 } // namespace yafiyogi::yy_values
