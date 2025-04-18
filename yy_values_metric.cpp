@@ -80,7 +80,7 @@ void Metric::Event(std::string_view p_value,
                 m_property,
                 p_value);
 
-  m_metric_data.Id() = m_id;
+  m_metric_data.Id(m_id);
   m_metric_data.Value(p_value);
   m_metric_data.Type(p_value_type);
   m_metric_data.Timestamp(p_timestamp);
@@ -93,10 +93,13 @@ void Metric::Event(std::string_view p_value,
     action->Apply(m_metric_properties, p_levels, m_metric_properties);
   }
 
-  m_metric_data.Id().Location(m_metric_properties.get_label(g_label_location));
+  m_metric_data.Location(m_metric_properties.get_label(g_label_location));
 
-  for(auto & l_labels = m_metric_data.Labels();
-      const auto & action : m_label_actions)
+  auto & l_labels = m_metric_data.Labels();
+  l_labels.clear(yy_data::ClearAction::Keep);
+  l_labels.set_label(yy_values::g_label_location, m_metric_data.Id().Location());
+  l_labels.set_label(yy_values::g_label_topic, std::string{p_topic});
+  for(const auto & action : m_label_actions)
   {
     action->Apply(m_metric_properties, p_levels, l_labels);
   }
