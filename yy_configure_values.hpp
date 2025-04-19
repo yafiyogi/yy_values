@@ -34,7 +34,7 @@ namespace yafiyogi::yy_values {
 
 LabelActions configure_label_actions(const YAML::Node & yaml_label_actions);
 ValueActions configure_value_actions(const YAML::Node & yaml_value_actions);
-LabelActions configure_value_properties(const YAML::Node & yaml_value);
+LabelActions configure_property_actions(const YAML::Node & yaml_value);
 MetricsMap configure_values(const YAML::Node & yaml_metrics);
 
 } // namespace yafiyogi::yy_values

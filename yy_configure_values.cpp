@@ -252,35 +252,40 @@ ValueActions configure_value_actions(const YAML::Node & yaml_value_actions)
   return value_actions;
 }
 
-LabelActions configure_value_properties(const YAML::Node & yaml_value)
+LabelActions configure_property_actions(const YAML::Node & yaml_handler)
 {
   LabelActions l_property_actions{};
 
-  // Configure 'location' property.
-
-  if(const auto & yaml_location = yaml_value[yy_values::g_label_location];
-     yaml_location)
+  if(yaml_handler)
   {
-    auto create_location = [&yaml_location]() {
-      ReplacementTopicsConfig topics_config{};
+    // Configure 'location' property.
+    if(const auto & yaml_location = yaml_handler[yy_values::g_label_location];
+       yaml_location)
+    {
+      auto create_location = [&yaml_location]() {
+        ReplacementTopicsConfig topics_config{};
 
-      if(yy_util::yaml_is_scalar(yaml_location))
-      {
-        configure_label_action_replace_path_format(yaml_location, topics_config);
-      }
-      else if(yy_util::yaml_is_sequence(yaml_location))
-      {
-        for(const auto & yaml_loc : yaml_location)
+
+        if(yy_util::yaml_is_scalar(yaml_location))
         {
-          configure_label_action_replace_path_format(yaml_loc, topics_config);
+          spdlog::info("     - location:"sv);
+          configure_label_action_replace_path_format(yaml_location, topics_config);
         }
-      }
+        else if(yy_util::yaml_is_sequence(yaml_location))
+        {
+          spdlog::info("    - location:"sv);
+          for(const auto & yaml_loc : yaml_location)
+          {
+            configure_label_action_replace_path_format(yaml_loc, topics_config);
+          }
+        }
 
-      return topics_config.create_automaton();
-    };
+        return topics_config.create_automaton();
+      };
 
-    l_property_actions.emplace_back(yy_util::static_unique_cast<LabelAction>(std::make_unique<ReplacePathLabelAction>(std::string{yy_values::g_label_location},
-                                                                                                                      create_location())));
+      l_property_actions.emplace_back(yy_util::static_unique_cast<LabelAction>(std::make_unique<ReplacePathLabelAction>(std::string{yy_values::g_label_location},
+                                                                                                                        create_location())));
+    }
   }
 
   return l_property_actions;
@@ -324,15 +329,18 @@ MetricsMap configure_values(const YAML::Node & yaml_values)
             spdlog::trace("        [line {}]."sv, yaml_property.Mark().line + 1);
 
             auto create_label_actions = [&yaml_handler]() {
+              spdlog::trace("        configure label actions [line {}]."sv, yaml_handler.Mark().line + 1);
               return configure_label_actions(yaml_handler["label_actions"sv]);
             };
 
             auto create_value_actions = [&yaml_handler]() {
+              spdlog::trace("        configure value actions [line {}]."sv, yaml_handler.Mark().line + 1);
               return configure_value_actions(yaml_handler["value_actions"sv]);
             };
 
             auto create_property_actions = [&yaml_handler]() {
-              return configure_value_properties(yaml_handler);
+              spdlog::trace("        configure property actions [line {}]."sv, yaml_handler.Mark().line + 1);
+              return configure_property_actions(yaml_handler);
             };
 
             auto metric{std::make_shared<Metric>(MetricId{value_id, std::string{}},
