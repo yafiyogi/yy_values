@@ -136,6 +136,7 @@ void configure_label_action_replace_path_format(const YAML::Node & yaml_format,
 
     if(yy_mqtt::TopicValidStatus::Valid == yy_mqtt::topic_validate(replacement_pattern, yy_mqtt::TopicType::Filter))
     {
+      spdlog::debug("       replace: [{}] with [{}]."sv, replacement_pattern, replacement_format);
       configure_label_action_replace_format(replacement_format,
                                             [replacement_pattern, &p_topics_config](ReplaceFormat & format)
                                             {
