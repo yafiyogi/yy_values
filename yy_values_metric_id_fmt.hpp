@@ -29,12 +29,15 @@
 #include <string_view>
 
 #include "fmt/format.h"
+#include "fmt/compile.h"
 
 #include "yy_values_metric_id.hpp"
 
 namespace yafiyogi::yy_values::fmt_detail {
 
-static constexpr std::string_view metric_id_fmt{"{}:{}"};
+using namespace fmt::literals;
+
+inline constexpr auto metric_id_fmt{"{}:{}"_cf};
 
 } // namespace yafiyogi::yy_values::fmt_detail
 

@@ -33,7 +33,7 @@ namespace yafiyogi::yy_values {
 
 using namespace fmt::literals;
 
-static constexpr auto level_format{"{}{}"_cf};
+inline constexpr auto level_format{"{}{}"_cf};
 void FormatLevel::operator()(const yy_mqtt::TopicLevelsView & p_path,
                              std::string & p_label_value) const noexcept
 {
