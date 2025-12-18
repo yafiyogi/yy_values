@@ -113,4 +113,4 @@ install(FILES "yy_valuesConfig.cmake" "${CMAKE_CURRENT_BINARY_DIR}/yy_valuesConf
 #add_subdirectory(examples)
 #add_subdirectory(benchmarks)
 
-add_yy_tidy_all(yy_values)
+add_yy_tidy_targets(yy_values)
