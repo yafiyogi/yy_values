@@ -80,7 +80,7 @@ void configure_label_action_replace_format(std::string_view replacement_format,
         using fast_atoi = yy_util::fast_atoi<size_type>;
 
         if(auto [format_idx, state] = fast_atoi::convert(idx);
-           (yy_util::FastFloat::Ok == state) && (format_idx > 0))
+           (yy_util::FastNum::Ok == state) && (format_idx > 0))
         {
           format.emplace_back(std::in_place_type_t<FormatLevel>{}, std::move(format_prefix), format_idx - 1);
           format_prefix.clear();
