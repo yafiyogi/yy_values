@@ -30,12 +30,14 @@
 
 namespace yafiyogi::yy_values {
 
-using tokenizer_type = yy_util::tokenizer<std::string_view::value_type, ':'>;
+using tokenizer_type = yy_util::tokenizer<std::string_view::value_type>;
 using token_type = tokenizer_type::token_type;
+
+inline constexpr tokenizer_type::value_type g_delim = ':';
 
 MetricId::MetricId(std::string_view p_metric_id) noexcept
 {
-  tokenizer_type tokenizer{yy_quad::make_const_span(p_metric_id)};
+  tokenizer_type tokenizer{yy_quad::make_const_span(p_metric_id), g_delim};
 
   auto id{tokenizer.scan()};
   m_name = std::string{id.begin(), id.end()};
