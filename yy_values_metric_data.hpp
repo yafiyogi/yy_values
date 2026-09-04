@@ -59,6 +59,7 @@ class MetricData
       m_value_type(p_other.m_value_type)
     {
       p_other.m_timestamp = timestamp_type{};
+      p_other.m_binary = binary_type{};
       p_other.m_value_type = ValueType::Unknown;
     }
 

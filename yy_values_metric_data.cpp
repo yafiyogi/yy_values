@@ -50,6 +50,7 @@ MetricData & MetricData::operator=(MetricData && p_other) noexcept
     p_other.m_timestamp = timestamp_type{};
     m_value = std::move(p_other.m_value);
     m_binary = std::move(p_other.m_binary);
+    p_other.m_binary = binary_type{};
     m_value_type = p_other.m_value_type;
     p_other.m_value_type = ValueType::Unknown;
   }
